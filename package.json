@@ -1,5 +1,5 @@
 {
-  "name": "mailer-helper",
+  "name": "kenote-mailer-helper",
   "version": "1.0.0",
   "description": "Mailer's Helper.",
   "main": "./dist/index.js",
