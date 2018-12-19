@@ -28,7 +28,8 @@
     "nodemailer-smtp-transport": "^2.7.4"
   },
   "peerDependencies": {
-    "fs-exists": "^7"
+    "@types/nodemailer": "^4.6.5",
+    "fs-exists": "^7.0.1"
   },
   "engines": {
     "node": ">8.0.0"

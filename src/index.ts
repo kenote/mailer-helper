@@ -11,7 +11,10 @@ import * as html2text from 'html-to-text'
 interface Setting {
   mailOptions: smtpTransport.SmtpOptions;
   mailDir?: string;
-  asyncRetryOptions?: AsyncRetryOptions;
+  asyncRetryOptions?: {
+    times?: number;
+    interval?: number | ((retryCount: number) => number);
+  }
   renderString?: (src: string, context: object) => string;
 }
 
