@@ -72,3 +72,23 @@ function MailerSetting(setting) {
     };
 }
 exports.MailerSetting = MailerSetting;
+function parseMailer(setting) {
+    if (!setting)
+        return;
+    var mailDir = setting.mailDir, mailOptions = setting.mailOptions, asyncRetryOptions = setting.asyncRetryOptions;
+    var defaultPort = mailOptions.secure ? 465 : 25;
+    setting.mailOptions.port = Number(mailOptions.port || defaultPort);
+    if (mailDir) {
+        setting.mailDir = path.resolve(process.cwd(), mailDir);
+    }
+    if (asyncRetryOptions) {
+        if (asyncRetryOptions.times) {
+            asyncRetryOptions.times = Number(asyncRetryOptions.times);
+        }
+        if (asyncRetryOptions.interval) {
+            asyncRetryOptions.interval = Number(asyncRetryOptions.interval);
+        }
+        setting.asyncRetryOptions = asyncRetryOptions;
+    }
+}
+exports.parseMailer = parseMailer;

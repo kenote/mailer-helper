@@ -82,3 +82,22 @@ export function MailerSetting (setting: Setting): any {
     target.prototype.__RenderString = setting.renderString || ((src: string, context: object): string => template(src)(context))
   }
 }
+
+export function parseMailer (setting: Setting | undefined): void {
+  if (!setting) return;
+  let { mailDir, mailOptions, asyncRetryOptions } = setting
+  let defaultPort: number = mailOptions.secure ? 465 : 25
+  setting.mailOptions.port = Number(mailOptions.port || defaultPort)
+  if (mailDir) {
+    setting.mailDir = path.resolve(process.cwd(), mailDir)
+  }
+  if (asyncRetryOptions) {
+    if (asyncRetryOptions.times) {
+      asyncRetryOptions.times = Number(asyncRetryOptions.times)
+    }
+    if (asyncRetryOptions.interval) {
+      asyncRetryOptions.interval = Number(asyncRetryOptions.interval)
+    }
+    setting.asyncRetryOptions = asyncRetryOptions
+  }
+}
