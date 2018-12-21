@@ -8,7 +8,7 @@ import * as fs from 'fs-extra'
 import * as template from 'lodash/template'
 import * as html2text from 'html-to-text'
 
-interface Setting {
+export interface Setting {
   mailOptions: smtpTransport.SmtpOptions;
   mailDir?: string;
   asyncRetryOptions?: {
