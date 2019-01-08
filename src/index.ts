@@ -5,7 +5,7 @@ import * as async from 'async'
 import * as mjml2html from 'mjml'
 import * as path from 'path'
 import * as fs from 'fs-extra'
-import * as template from 'lodash/template'
+import { template } from 'lodash'
 import * as html2text from 'html-to-text'
 
 export interface Setting {

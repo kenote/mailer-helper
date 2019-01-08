@@ -17,7 +17,7 @@ var async = require("async");
 var mjml2html = require("mjml");
 var path = require("path");
 var fs = require("fs-extra");
-var template = require("lodash/template");
+var lodash_1 = require("lodash");
 var html2text = require("html-to-text");
 var MailerHelper = (function () {
     function MailerHelper() {
@@ -68,7 +68,7 @@ function MailerSetting(setting) {
         target.prototype.__Transports = nodemailer.createTransport(mailOpts);
         target.prototype.__AsyncRetryOptions = __assign({ times: 5, interval: 200 }, setting.asyncRetryOptions);
         target.prototype.__MailDir = setting.mailDir || path.resolve(process.cwd(), 'mails');
-        target.prototype.__RenderString = setting.renderString || (function (src, context) { return template(src)(context); });
+        target.prototype.__RenderString = setting.renderString || (function (src, context) { return lodash_1.template(src)(context); });
     };
 }
 exports.MailerSetting = MailerSetting;
