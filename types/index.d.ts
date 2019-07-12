@@ -1,5 +1,6 @@
 
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
+export { Mailer, Setting } from '../src'
 
 export interface MailerSetting {
 
@@ -24,7 +25,7 @@ export interface MailerSetting {
   asyncRetryOptions ?: AsyncRetryOptions
 }
 
-interface Maps<T> extends Record<string, T> {}
+export interface Maps<T> extends Record<string, T> {}
 
 /**
  * 渲染函数
