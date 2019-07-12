@@ -1,52 +1,45 @@
 # mailer-helper
+
 Mailer's Helper.
+
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![Build Status][travis-image]][travis-url]
+[![Gratipay][licensed-image]][licensed-url]
 
 ## Installation
 
 ```bash
+$ npm install kenote-mailer-helper
+#
 $ yarn add kenote-mailer-helper
 ```
 
 ## Usages
 
-`utils/mailer.ts`
+`mailer.ts`
 
 ```ts
-import { MailerHelper, MailerSetting } from 'kenote-mailer-helper'
+import { Mailer, Setting } from 'kenote-mailer-helper'
+import * as Mail from 'nodemailer/lib/mailer'
 
-@MailerSetting({
-  // Mailer options
-  mailOptions: {
-    host: '0.0.0.0',  // Server address
-    port: 465,  // Server port, default 25 | 465
-    secure: true, // use TLS
+@Setting({
+  smtpOptions: {
+    host: 'smtp.ethereal.email',
+    port: 587,
     auth: {
-      user: 'username',
-      pass: 'password'
+      user: 'penelope.leuschke41@ethereal.email',
+      pass: 'aPxRSFBXbM7dseEwKK'
     }
   },
-  // Mail template directory
-  mailDir: path.resolve(process.cwd(), 'mails'),
-  // Rending Funtion, default use lodash/template
-  renderString: nunjucks.renderString,
-  // Failed retry option
   asyncRetryOptions: {
-    times: 5,  // Number of Retries
-    interval: 200  // Send interval
-  }
+    times: 3,
+    interval: 200
+  },
+  mailDir: 'mails',
+  renderString: nunjucks.renderString
 })
-class Mailer extends MailerHelper {
-
-}
-
-export default new Mailer()
-```
-
-`app.ts`
-
-```ts
-import * as Mail from 'nodemailer/lib/mailer'
-import Mailer from './utils/mailer'
+class NodeMailer extends Mailer {}
 
 /** 
  * 发送邮件选项
@@ -80,40 +73,49 @@ import Mailer from './utils/mailer'
  *     }
  *   ]
  **/
-const mail: Mail.Options = {
-  from: 'kenote <thondery@163.com>',
-  to: 'thondery <thondery@xxx.com>',
-  subject: '邮件标题',
+const mail: Mail = {
+  from: 'penelope.leuschke41@ethereal.email',
+  to: 'penelope.leuschke41@ethereal.email',
+  subject: 'Ethereal Email',
+  text: 'Ethereal Email.'
 }
 
-const context: object = {
-  site_name: 'kenote',
-  username: 'thondery',
-  email: 'thondery@163.com'
-}
+const nodeMailer: NodeMailer = new NodeMailer()
 
-Mailer.sendMail('user.mjml', mail, context)
+// asyncSend
+nodeMailer.asyncSend(mail)
+
+// renderMail
+nodeMailer.renderMail('email_verify.mjml', {})
+
+// sendMail
+nodeMailer.sendMail('email_verify.mjml', mail, {})
 ```
 
-`mails/user.mjml`
+`email_verify.mjml`
 
 ```xml
 <mjml>
   <mj-head>
-    <mj-title>欢迎加入{{ site_name }}</mj-title>
+    <mj-title>{{ site_name }}邮箱验证</mj-title>
     <mj-attributes>
-      <mj-all font-size="16px" color="#797878" />
+      <mj-all font-size="15px" color="#646464" line-height="1.4" />
       <mj-class name="title" font-size="20px" color="#4e9c74" font-weight="bold" />
     <mj-attributes>
   </mj-head>
-  <mj-body background-color="#ffffff">
+  <mj-body background-color="#ffffff" width="100%">
     <mj-section>
       <mj-column>
-        <mj-text mj-class="title">欢迎加入{{ site_name }}</mj-text>
-        <mj-text>{{ username }}，您好！</mj-text>
-        <mj-text>您已成为{{ site_name }}的会员，以下是您的账号信息：</mj-text>
-        <mj-text>用户名：{{ username }}</mj-text>
-        <mj-text>E-Mail：{{ email }}</mj-text>
+        <mj-text>亲爱的 {{ username }}:</mj-text>
+        <mj-text>欢迎申请{{ site_name }}服务!</mj-text>
+        <mj-text>你的{{ site_name }}帐号是: {{ username }}<br/>请点击下面的链接完成邮箱验证:</mj-text>
+        <mj-text font-size="14px"><a href="{{ email_verify_url }}" target="_blank">{{ email_verify_url }}</a></mj-text>
+        <mj-text>如果以上链接无法点击，请将该链接复制到浏览器（如 Chrome ）的地址栏中访问，也可以成功完成邮箱验证！</mj-text>
+        <mj-spacer height="30px" />
+        <mj-text>1. 为了保障您账号的安全性, 请在{{ timeout }}小时内完成验证, 此链接将在您激活过一次后失效!</mj-text>
+        <mj-text>2. 如您没有注册过{{ site_name }}账号, 请您忽略此邮件, 由此给您带来的不便敬请谅解。</mj-text>
+        <mj-spacer height="30px" />
+        <mj-text>- {{ site_name }}<br/>(这是一封自动产生的Email，请勿回复)</mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
@@ -123,3 +125,12 @@ Mailer.sendMail('user.mjml', mail, context)
 ## License
 
 this repo is released under the [MIT License](https://github.com/kenote/mailer-helper/blob/master/LICENSE).
+
+[npm-image]: https://img.shields.io/npm/v/kenote-mailer-helper.svg
+[npm-url]: https://www.npmjs.com/package/kenote-mailer-helper
+[downloads-image]: https://img.shields.io/npm/dm/kenote-mailer-helper.svg
+[downloads-url]: https://www.npmjs.com/package/kenote-mailer-helper
+[travis-image]: https://travis-ci.com/kenote/mailer-helper.svg?branch=master
+[travis-url]: https://travis-ci.com/kenote/mailer-helper
+[licensed-image]: https://img.shields.io/badge/license-MIT-blue.svg
+[licensed-url]: https://github.com/kenote/mailer-helper/blob/master/LICENSE
